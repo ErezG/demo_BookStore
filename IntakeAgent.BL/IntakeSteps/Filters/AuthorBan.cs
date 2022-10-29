@@ -7,7 +7,7 @@ namespace IntakeAgent.BL.IntakeSteps.Filters
     {
         public AuthorBan(string name)
         {
-            _isPeterRegex = new Regex(@$"(?<=^|\W){name}(?>$|\W)", RegexOptions.IgnoreCase);
+            _isPeterRegex = new Regex(@$"(?<=^|\W){name}(?=$|\W)", RegexOptions.IgnoreCase);
         }
 
         private readonly Regex _isPeterRegex;
