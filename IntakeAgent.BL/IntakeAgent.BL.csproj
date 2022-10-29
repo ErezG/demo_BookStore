@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ExportModule.CSV\ExportModule.CSV.csproj" />
     <ProjectReference Include="..\IntakeAgent.Common\IntakeAgent.Common.csproj" />
   </ItemGroup>
 

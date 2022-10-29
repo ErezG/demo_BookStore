@@ -2,7 +2,7 @@
 
 namespace ExportModule.CSV
 {
-    public class BooksExporter : IExportModule
+    public class CSVBooksExporter : IExportModule
     {
         public Task<bool> ExportBookList(IEnumerable<Book> books)
         {

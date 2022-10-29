@@ -12,10 +12,10 @@ namespace BooksIntakeAgent
 
             try
             {
-                ICollection<Book> books;
+                ICollection<Book> books = null;
                 try
                 {
-                    books = await BooksParser.Parse(filePath);
+                    books = await IntakeLogic.Parse(filePath);
                 }
                 catch (FileNotFoundException)
                 {
@@ -42,7 +42,10 @@ namespace BooksIntakeAgent
                     Console.ForegroundColor = ConsoleColor.White;
                 }
 
-
+                if (books != null)
+                {
+                    await IntakeLogic.RunIntake(books);
+                }
             }
             catch (Exception ex)
             {

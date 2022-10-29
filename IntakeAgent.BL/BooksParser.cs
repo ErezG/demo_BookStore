@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace IntakeAgent.BL
 {
-    public static class BooksParser
+    internal static class BooksParser
     {
         public static async Task<Book[]> Parse(string filePath)
         {
