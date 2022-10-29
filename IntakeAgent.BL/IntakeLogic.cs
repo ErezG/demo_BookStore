@@ -11,7 +11,8 @@ namespace IntakeAgent.BL
             _intakeSteps = new IIntakeStep[]
             {
                 new IntakeSteps.Transformations.PriceRoundUpper(),
-                new IntakeSteps.Filters.KosherOnly()
+                new IntakeSteps.Filters.KosherOnly(),
+                new IntakeSteps.Filters.AuthorBan("peter")
             };
             _processor = new BooksProcessor(_intakeSteps);
             _booksExporter = new CSVBooksExporter();
