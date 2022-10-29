@@ -2,15 +2,9 @@
 
 namespace IntakeAgent.BL.IntakeSteps.Transformations
 {
-    internal class PriceRoundUpper : IIntakeTransformation
+    internal class PriceRoundUpper : IntakeTransformation
     {
-        public (bool, Book) RunStep(Book book)
-        {
-            book = Transform(book);
-            return (true, book);
-        }
-
-        public Book Transform(Book book)
+        public override Book Transform(Book book)
         {
             book.Price = (int)book.Price + (book.Price % 1 > 0 ? 1 : 0);
             return book;
