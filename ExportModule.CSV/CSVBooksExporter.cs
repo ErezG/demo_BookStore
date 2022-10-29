@@ -11,11 +11,13 @@ namespace ExportModule.CSV
     {
         public async Task<bool> ExportBookList(IEnumerable<Book> books, string filePath)
         {
+            var orderedBooks = books.OrderBy(book => book.Title).ToArray();
+
             using (var writer = new StreamWriter(filePath))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csv.Context.RegisterClassMap<BookMap>();
-                await csv.WriteRecordsAsync(books);
+                await csv.WriteRecordsAsync(orderedBooks);
             }
 
             return true;
