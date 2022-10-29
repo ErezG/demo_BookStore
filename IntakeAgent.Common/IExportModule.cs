@@ -2,6 +2,6 @@
 {
     public interface IExportModule
     {
-        Task<bool> ExportBookList(IEnumerable<Book> books);
+        Task<bool> ExportBookList(IEnumerable<Book> books, string filePath);
     }
 }
