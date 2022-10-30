@@ -1,6 +1,7 @@
 ﻿using IntakeAgent.BL.IntakeSteps;
 using IntakeAgent.Common;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace IntakeAgent.BL
 {
@@ -8,18 +9,18 @@ namespace IntakeAgent.BL
     {
         private IEnumerable<IIntakeStep> _intakeSteps;
 
-        //logs
-        //---------------------------------------
+        #region logging members
         private bool _keepLog;
         private bool _isFullLog;
-        private ILogger _logger;
-        //---------------------------------------
+        private ILogger _logger; 
+        #endregion
 
-        public BooksProcessor(IEnumerable<IIntakeStep> intakeSteps, ILogger logger)
+        public BooksProcessor(IOptions<BooksProcessorConfigs> configs, ILoggerFactory loggerFactory)
         {
-            //temp - get from config
-            var keepLog = true;
-            var isFullLog = true;
+            var keepLog = configs.Value.KeepLog;
+            var isFullLog = configs.Value.IsFullLog;
+            var intakeSteps = StepsInitializer.InitializeSteps(configs.Value.IntakeSteps).ToArray();
+            var logger = loggerFactory.CreateLogger(nameof(BooksProcessor));
 
             _intakeSteps = intakeSteps;
             _logger = logger;
@@ -33,8 +34,6 @@ namespace IntakeAgent.BL
 
             foreach (var item in books)
             {
-                //var scope = logger?.BeginScope(item);
-                
                 var isValid = true;
                 var book = item;
                 foreach (var step in _intakeSteps)
@@ -48,8 +47,6 @@ namespace IntakeAgent.BL
                         if (!_isFullLog) { break; }
                     }
                 }
-
-                //scope?.Dispose();
 
                 if (isValid) { yield return book; }
             }

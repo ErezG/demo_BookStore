@@ -13,7 +13,7 @@ namespace IntakeAgent.BL.IntakeSteps.Filters
             if (logger != null)
             {
                 var log = CreateLog(book.Title, isValid, $"published on {publishDay}");
-                logger.LogTrace(log);
+                logger.LogDebug(log);
             }
 
             return isValid;

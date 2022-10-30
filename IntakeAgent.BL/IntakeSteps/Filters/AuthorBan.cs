@@ -23,8 +23,9 @@ namespace IntakeAgent.BL.IntakeSteps.Filters
 
             if (logger != null)
             {
-                var log = CreateLog(book.Title, isValid, $"{nameof(Book.Author)} {author} contains banned name: {_bannedName}");
-                logger.LogTrace(log);
+                var isBannedContained = isValid ? "doesn't contain" : "contains";
+                var log = CreateLog(book.Title, isValid, $"{nameof(Book.Author)} \"{author}\" {isBannedContained} banned name: \"{_bannedName}\"");
+                logger.LogDebug(log);
             }
 
             return isValid;

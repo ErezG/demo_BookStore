@@ -14,7 +14,7 @@ namespace IntakeAgent.BL.IntakeSteps.Transformations
             if (logger != null)
             {
                 var log = CreateLog(book.Title, $"\'{nameof(book.Price)}\': {from} => {to}");
-                logger.LogTrace(log);
+                logger.LogDebug(log);
             }
 
             return book;
