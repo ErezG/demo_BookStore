@@ -1,4 +1,5 @@
 ﻿using IntakeAgent.Common;
+using Microsoft.Extensions.Logging;
 
 namespace IntakeAgent.BL.IntakeSteps.Transformations
 {
@@ -11,13 +12,13 @@ namespace IntakeAgent.BL.IntakeSteps.Transformations
 
         private readonly string _typeName;
 
-        public (bool, Book) RunStep(Book book)
+        public (bool, Book) RunStep(Book book, ILogger? logger)
         {
-            book = Transform(book);
+            book = Transform(book, logger);
             return (true, book);
         }
 
-        public abstract Book Transform(Book book);
+        public abstract Book Transform(Book book, ILogger? logger);
 
         protected string CreateLog(string title, string change)
         {

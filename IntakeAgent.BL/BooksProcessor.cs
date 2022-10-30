@@ -1,50 +1,55 @@
 ﻿using IntakeAgent.BL.IntakeSteps;
 using IntakeAgent.Common;
+using Microsoft.Extensions.Logging;
 
 namespace IntakeAgent.BL
 {
     public class BooksProcessor
     {
         private IEnumerable<IIntakeStep> _intakeSteps;
-        
+
         //logs
         //---------------------------------------
-        //private bool _keepLog;
-        //private bool _isFullLog;
-        //private object _logger;
+        private bool _keepLog;
+        private bool _isFullLog;
+        private ILogger _logger;
         //---------------------------------------
 
-        public BooksProcessor(IEnumerable<IIntakeStep> intakeSteps)
+        public BooksProcessor(IEnumerable<IIntakeStep> intakeSteps, ILogger logger)
         {
+            //temp - get from config
+            var keepLog = true;
+            var isFullLog = true;
+
             _intakeSteps = intakeSteps;
-            //_keepLog = keepLog;
-            //_isFullLog = keepLog && isFullLog;
-            //_logger = logger;
+            _logger = logger;
+            _keepLog = logger != null && keepLog;
+            _isFullLog = keepLog && isFullLog;
         }
 
         public IEnumerable<Book> Process(IEnumerable<Book> books)
         {
+            var logger = _keepLog ? _logger : null;
+
             foreach (var item in books)
             {
+                //var scope = logger?.BeginScope(item);
+                
                 var isValid = true;
                 var book = item;
                 foreach (var step in _intakeSteps)
                 {
-                    (bool isStepValid, book) = step.RunStep(book); // pass logger? to log ["<book name>" change <prop>: <from> > <to>]["Aladin" change price: 3.6 > 4]
-
-                    //if (_keepLog)
-                    //{
-                    //    //todo: log
-                    //    // get step name, append outputs according to interfaces, and write to log
-                    //}
+                    (bool isStepValid, book) = step.RunStep(book, logger);
 
                     if (!isStepValid)
                     {
                         isValid = false;
 
-                        /*if (!_isFullLog)*/ { break; }
+                        if (!_isFullLog) { break; }
                     }
                 }
+
+                //scope?.Dispose();
 
                 if (isValid) { yield return book; }
             }

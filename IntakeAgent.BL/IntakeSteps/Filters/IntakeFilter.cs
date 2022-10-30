@@ -1,4 +1,5 @@
 ﻿using IntakeAgent.Common;
+using Microsoft.Extensions.Logging;
 
 namespace IntakeAgent.BL.IntakeSteps.Filters
 {
@@ -11,13 +12,13 @@ namespace IntakeAgent.BL.IntakeSteps.Filters
 
         private readonly string _typeName;
 
-        public (bool, Book) RunStep(Book book)
+        public (bool, Book) RunStep(Book book, ILogger? logger)
         {
-            bool isValid = IsValid(book);
+            bool isValid = IsValid(book, logger);
             return (isValid, book);
         }
 
-        public abstract bool IsValid(Book book);
+        public abstract bool IsValid(Book book, ILogger? logger);
 
         protected string CreateLog(string title, bool isValid, string cause)
         {
