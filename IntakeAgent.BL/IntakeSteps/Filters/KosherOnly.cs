@@ -7,7 +7,9 @@ namespace IntakeAgent.BL.IntakeSteps.Filters
         public override bool IsValid(Book book)
         {
             var publishDay = book.PublishDate.DayOfWeek;
-            return publishDay != DayOfWeek.Saturday;
+            bool isValid = publishDay != DayOfWeek.Saturday;
+            var log = CreateLog(book.Title, isValid, $"published on {publishDay}");
+            return isValid;
         }
     }
 }
