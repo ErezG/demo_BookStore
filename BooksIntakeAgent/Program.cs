@@ -4,6 +4,8 @@ using IntakeAgent.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 using System.Text.Json;
 
 namespace BooksIntakeAgent
@@ -82,9 +84,19 @@ namespace BooksIntakeAgent
                 .ConfigureServices((hostBuilder, services) =>
                 {
                     _configuration = hostBuilder.Configuration;
-                    services.AddOptions().Configure<IntakeConfigs>(hostBuilder.Configuration.GetSection("IntakeLogic"));
+                    services.AddOptions().Configure<IntakeConfigs>(hostBuilder.Configuration.GetSection("IntakeLogic"))
+                                         .Configure<BooksProcessorConfigs>(hostBuilder.Configuration.GetSection("BooksProcessor"));
                     services.AddSingleton<IExportModule, CSVBooksExporter>();
+                    services.AddSingleton<BooksProcessor>();
                     services.AddSingleton<IntakeLogic>();
+
+                    services.AddLogging(loggingBuilder =>
+                    {
+                        // configure Logging with NLog
+                        loggingBuilder.ClearProviders();
+                        loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Debug);
+                        loggingBuilder.AddNLog(hostBuilder.Configuration);
+                    });
                 });
         }
     }

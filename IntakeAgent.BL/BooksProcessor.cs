@@ -1,48 +1,50 @@
 ﻿using IntakeAgent.BL.IntakeSteps;
 using IntakeAgent.Common;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace IntakeAgent.BL
 {
     public class BooksProcessor
     {
         private IEnumerable<IIntakeStep> _intakeSteps;
-        
-        //logs
-        //---------------------------------------
-        //private bool _keepLog;
-        //private bool _isFullLog;
-        //private object _logger;
-        //---------------------------------------
 
-        public BooksProcessor(IEnumerable<IIntakeStep> intakeSteps)
+        #region logging members
+        private bool _keepLog;
+        private bool _isFullLog;
+        private ILogger _logger; 
+        #endregion
+
+        public BooksProcessor(IOptions<BooksProcessorConfigs> configs, ILoggerFactory loggerFactory)
         {
+            var keepLog = configs.Value.KeepLog;
+            var isFullLog = configs.Value.IsFullLog;
+            var intakeSteps = StepsInitializer.InitializeSteps(configs.Value.IntakeSteps).ToArray();
+            var logger = loggerFactory.CreateLogger(nameof(BooksProcessor));
+
             _intakeSteps = intakeSteps;
-            //_keepLog = keepLog;
-            //_isFullLog = keepLog && isFullLog;
-            //_logger = logger;
+            _logger = logger;
+            _keepLog = logger != null && keepLog;
+            _isFullLog = keepLog && isFullLog;
         }
 
         public IEnumerable<Book> Process(IEnumerable<Book> books)
         {
+            var logger = _keepLog ? _logger : null;
+
             foreach (var item in books)
             {
                 var isValid = true;
                 var book = item;
                 foreach (var step in _intakeSteps)
                 {
-                    (bool isStepValid, book) = step.RunStep(book); // pass logger? to log ["<book name>" change <prop>: <from> > <to>]["Aladin" change price: 3.6 > 4]
-
-                    //if (_keepLog)
-                    //{
-                    //    //todo: log
-                    //    // get step name, append outputs according to interfaces, and write to log
-                    //}
+                    (bool isStepValid, book) = step.RunStep(book, logger);
 
                     if (!isStepValid)
                     {
                         isValid = false;
 
-                        /*if (!_isFullLog)*/ { break; }
+                        if (!_isFullLog) { break; }
                     }
                 }
 

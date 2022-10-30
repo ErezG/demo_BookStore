@@ -1,20 +1,17 @@
-﻿using IntakeAgent.BL.IntakeSteps;
-using IntakeAgent.Common;
+﻿using IntakeAgent.Common;
 using Microsoft.Extensions.Options;
 
 namespace IntakeAgent.BL
 {
     public class IntakeLogic
     {
-        public IntakeLogic(IExportModule exportModule, IOptions<IntakeConfigs> configs)
+        public IntakeLogic(BooksProcessor booksProcessor, IExportModule exportModule, IOptions<IntakeConfigs> configs)
         {
-            _intakeSteps = StepsInitializer.InitializeSteps(configs.Value.IntakeSteps).ToArray();
-            _processor = new BooksProcessor(_intakeSteps);
+            _processor = booksProcessor;
             _booksExporter = exportModule;
             _exportPath = configs.Value.ExportPath;
         }
 
-        private readonly IIntakeStep[] _intakeSteps;
         private readonly BooksProcessor _processor;
         private readonly IExportModule _booksExporter;
         private readonly string _exportPath;

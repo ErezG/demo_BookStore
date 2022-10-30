@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IntakeAgent.BL
+﻿namespace IntakeAgent.BL
 {
     public class IntakeConfigs
     {
-        public IntakeStepConfig[] IntakeSteps { get; set; }
         public string ExportPath { get; set; }
+    }
+
+    public class BooksProcessorConfigs
+    {
+        public bool KeepLog { get; set; }
+        public bool IsFullLog { get; set; }
+        public IntakeStepConfig[] IntakeSteps { get; set; }
     }
 
     public class IntakeStepConfig
